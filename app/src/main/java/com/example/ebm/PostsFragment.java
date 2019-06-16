@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ebm.API.APIClient;
 import com.example.ebm.API.APIInterface;
+import com.example.ebm.modele.CollecResponse;
 import com.example.ebm.modele.Post;
 import com.example.ebm.modele.PostsList;
 
@@ -30,8 +31,8 @@ import retrofit2.Response;
  */
 public class PostsFragment extends Fragment implements PostsAdapter.onClickPostListener{
 
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
+    private static final String ARG_ID_COLLEC = "idCollec";
+    private int mIdCollection = -1;
     private OnListFragmentInteractionListener mListener;
     private String TAG = "PostsFragment";
     private RecyclerView recyclerView;
@@ -48,10 +49,10 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     public PostsFragment() {
     }
 
-    public static PostsFragment newInstance(int columnCount) {
+    public static PostsFragment newInstance(int idCollection) {
         PostsFragment fragment = new PostsFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putInt(ARG_ID_COLLEC, idCollection);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +61,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mIdCollection = getArguments().getInt(ARG_ID_COLLEC);
         }
     }
 
@@ -76,13 +77,13 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                recupererPostsList();
+                recupererPosts();
             }
         });
 
 
         recyclerView = rootview.findViewById(R.id.list);
-        recupererPostsList(); //TODO Get Posts from databse here
+        recupererPosts(); //TODO Get Posts from databse here
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(dividerItemDecoration);
 
@@ -122,9 +123,43 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     }
 
     //Debut de region API
+    public void recupererPosts(){
+        if(mIdCollection == -1)
+            recupererPostsList();
+        else
+            recupererCollectionPosts();
+    }
+
+    private void recupererCollectionPosts() {
+        APIInterface api = APIClient.createService(APIInterface.class);
+        Call<CollecResponse> call = api.appelPostsCollec(mIdCollection);
+        Log.i(TAG, "recupererCollectionPosts: " + call.request().url());
+        call.enqueue(new Callback<CollecResponse>() {
+            @Override
+            public void onResponse(Call<CollecResponse> call, Response<CollecResponse> response) {
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "onResponse: succesful");
+                    CollecResponse collection = new CollecResponse(response.body());
+                    Log.i(TAG, "onResponse: " + collection.getCollection().getName());
+                    adapter = new PostsAdapter(collection.getCollection().getPosts(), PostsFragment.this);
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    swipeContainer.setRefreshing(false);
+                } else {
+                    Log.i(TAG, "onResponse: not that succesful");
+                }
+            }
+            @Override
+            public void onFailure(Call<CollecResponse> call, Throwable t) {
+                Log.i(TAG, "onFailure: Posts call Failed" + " "+ t.getMessage());}
+        });
+    }
+
     public void recupererPostsList(){
         APIInterface api = APIClient.createService(APIInterface.class);
-        Call<PostsList> call = api.appelPosts();
+        Call<PostsList> call;
+        call = api.appelPosts();
+        Log.i(TAG, "recupererPostsList: " + call.request().url());
         call.enqueue(new Callback<PostsList>() {
             @Override
             public void onResponse(Call<PostsList> call, Response<PostsList> response) {
@@ -132,7 +167,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
                     Log.i(TAG, "onResponse: succesful");
                     postsList = new PostsList(response.body());
                     Log.i(TAG, "onResponse: " + postsList.toString());
-                    adapter = new PostsAdapter(postsList.getPosts(),PostsFragment.this);
+                    adapter = new PostsAdapter(postsList.getPosts(), PostsFragment.this);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
@@ -152,7 +187,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     public void clickPost(int position) {
         Log.i(TAG, "clickPost: Clicked post");
         mListener.onListFragmentInteraction(postsList.getPosts().get(position));
-        //TODO Lancer écran liste de commentaires
+        //TODO Lancer écran detailPost
     }
 
     @Override

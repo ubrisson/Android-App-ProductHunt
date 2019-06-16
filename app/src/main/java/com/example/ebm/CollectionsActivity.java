@@ -1,6 +1,6 @@
 package com.example.ebm;
 
-import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -14,8 +14,6 @@ import com.example.ebm.API.APIClient;
 import com.example.ebm.API.APIInterface;
 import com.example.ebm.collections_feature.CollectionsAdapter;
 import com.example.ebm.modele.CollectionsList;
-
-import javax.security.auth.login.LoginException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,5 +90,8 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     @Override
     public void clickCollec(int position) {
         Log.i(TAG, "clickCollec: Clicked");
+        Intent detailCollecIntent = new Intent(this,DetailCollectionActivity.class);
+        detailCollecIntent.putExtra("idCollection", collectionsList.getCollections().get(position).getId());
+        startActivity(detailCollecIntent);
     }
 }
