@@ -1,30 +1,11 @@
 package com.example.ebm;
 
 import android.os.Bundle;
-
-import com.example.ebm.dummy.DummyContent;
-import com.example.ebm.modele.Post;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.util.Log;
-import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.core.view.GravityCompat;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-
 import android.view.MenuItem;
-
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.Menu;
 import android.widget.FrameLayout;
+
+import com.example.ebm.modele.Post;
 
 public class MainActivity extends BaseDrawerActivity
         implements PostsFragment.OnListFragmentInteractionListener {
