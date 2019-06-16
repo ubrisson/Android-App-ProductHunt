@@ -6,8 +6,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.ebm.API.APIClient;
 import com.example.ebm.API.APIInterface;
+import com.example.ebm.collections_feature.CollectionsAdapter;
 import com.example.ebm.modele.CollectionsList;
 
 import javax.security.auth.login.LoginException;
@@ -16,10 +21,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CollectionsActivity extends BaseDrawerActivity {
+public class CollectionsActivity extends BaseDrawerActivity implements CollectionsAdapter.onClickCollecListener {
 
     private String TAG = "CollectionsActivity";
     private CollectionsList collectionsList;
+    private RecyclerView recyclerView;
+    private CollectionsAdapter adapter;
+    private DividerItemDecoration dividerItemDecoration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +36,12 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
         FrameLayout contentFrameLayout = findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.collections_main, contentFrameLayout);
+
+        dividerItemDecoration = new DividerItemDecoration(CollectionsActivity.this,
+                LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(
+                this.getResources().getDrawable(R.drawable.sk_line_divider,this.getTheme()));
+
     }
 
     @Override
@@ -39,7 +53,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            //TODO Refresh collections
             recupererCollectionsList();
             return true;
         }
@@ -58,6 +71,11 @@ public class CollectionsActivity extends BaseDrawerActivity {
                     Log.i(TAG, "onResponse: succesful");
                     collectionsList = new CollectionsList(response.body());
                     Log.i(TAG, "onResponse: " + collectionsList.toString());
+                    recyclerView = findViewById(R.id.recyclerView);
+                    adapter = new CollectionsAdapter(collectionsList.getCollections(),CollectionsActivity.this);
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(CollectionsActivity.this));
+                    recyclerView.addItemDecoration(dividerItemDecoration);
 
                 } else {
                     Log.i(TAG, "onResponse: not that succesful");
@@ -70,4 +88,9 @@ public class CollectionsActivity extends BaseDrawerActivity {
         });
     }
     //Fin de region API
+
+    @Override
+    public void clickCollec(int position) {
+        Log.i(TAG, "clickCollec: Clicked");
+    }
 }

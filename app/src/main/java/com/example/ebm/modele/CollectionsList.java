@@ -22,4 +22,8 @@ public class CollectionsList {
         }
         return sortie.toString();
     }
+
+    public List<CollecPH> getCollections() {
+        return collections;
+    }
 }
