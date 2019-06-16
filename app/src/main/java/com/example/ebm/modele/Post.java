@@ -1,53 +1,79 @@
 package com.example.ebm.modele;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Post {
-  private String title;
-  private String subTitle;
-  private String imageUrl;
-  private String postUrl;
-  private long id;
 
-  public String getTitle() {
-    return title;
-  }
+    private long id;
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+    @SerializedName("name")
+    private String title;
 
-  public String getSubTitle() {
-    return subTitle;
-  }
+    @SerializedName("tagline")
+    private String subTitle;
 
-  public void setSubTitle(String subTitle) {
-    this.subTitle = subTitle;
-  }
+    private int votes_count;
 
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
-  }
+    private Thumbnail thumbnail;
 
-  public String getImageUrl() {
-    return imageUrl;
-  }
+    @SerializedName("redirect_url")
+    private String postUrl;
 
-  public String getPostUrl() {
-    return postUrl;
-  }
 
-  public void setPostUrl(String postUrl) {
-    this.postUrl = postUrl;
-  }
 
-  public void setId(long id) {
-    this.id = id;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public long getId() {
-    return id;
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  /*
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
+    public String getPostUrl() {
+        return postUrl;
+    }
+
+    public void setPostUrl(String postUrl) {
+        this.postUrl = postUrl;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public int getVotes_count() {
+        return votes_count;
+    }
+
+    public void setVotes_count(int votes_count) {
+        this.votes_count = votes_count;
+    }
+
+    public Thumbnail getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Thumbnail thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getImageUrl() {
+        return thumbnail.getImage_url();
+    }
+
+    /*
   public ContentValues toContentValues() {
 
 

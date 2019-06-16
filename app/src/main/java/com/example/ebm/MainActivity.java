@@ -3,9 +3,11 @@ package com.example.ebm;
 import android.os.Bundle;
 
 import com.example.ebm.dummy.DummyContent;
+import com.example.ebm.modele.Post;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -27,6 +29,9 @@ import android.widget.FrameLayout;
 public class MainActivity extends BaseDrawerActivity
         implements PostsFragment.OnListFragmentInteractionListener {
 
+    private PostsFragment fragment;
+    private String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -34,6 +39,9 @@ public class MainActivity extends BaseDrawerActivity
 
         FrameLayout contentFrameLayout = findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.fragment_main, contentFrameLayout);
+
+        fragment = (PostsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+
     }
 
     @Override
@@ -45,15 +53,16 @@ public class MainActivity extends BaseDrawerActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            //TODO Refresh fragment posts
+            fragment.recupererPostsList();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-        //TODO REfresh Fragment + Collections + Posts
+    public void onListFragmentInteraction(Post post) {
+        Log.i(TAG, "onListFragmentInteraction: clicked" + post.getTitle());
     }
 }

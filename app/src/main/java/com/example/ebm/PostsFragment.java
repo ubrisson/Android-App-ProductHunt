@@ -4,18 +4,26 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.ebm.dummy.DummyContent;
-import com.example.ebm.dummy.DummyContent.DummyItem;
+import com.example.ebm.API.APIClient;
+import com.example.ebm.API.APIInterface;
+import com.example.ebm.modele.PostsList;
+import com.example.ebm.modele.Post;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A fragment representing a list of Items.
@@ -23,13 +31,17 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class PostsFragment extends Fragment {
+public class PostsFragment extends Fragment implements PostsAdapter.onClickPostListener{
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private String TAG = "PostsFragment";
+    private RecyclerView recyclerView;
+    private PostsAdapter adapter;
+    private DividerItemDecoration dividerItemDecoration;
+    private PostsList postsList;
+    private View rootview;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -38,8 +50,6 @@ public class PostsFragment extends Fragment {
     public PostsFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static PostsFragment newInstance(int columnCount) {
         PostsFragment fragment = new PostsFragment();
         Bundle args = new Bundle();
@@ -58,10 +68,14 @@ public class PostsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.posts_list, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootview = inflater.inflate(R.layout.posts_list, container, false);
 
+        dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(
+                this.getResources().getDrawable(R.drawable.sk_line_divider,getActivity().getTheme()));
+
+        /*
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -71,9 +85,9 @@ public class PostsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new PostsAdapter(DummyContent.ITEMS, mListener));
-        }
-        return view;
+            recyclerView.setAdapter(new PostsAdapter(posts,this));
+        }*/
+        return rootview;
     }
 
 
@@ -105,7 +119,41 @@ public class PostsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Post post);
+    }
+
+    //Debut de region API
+    public void recupererPostsList(){
+        APIInterface api = APIClient.createService(APIInterface.class);
+        Call<PostsList> call = api.appelPosts();
+        call.enqueue(new Callback<PostsList>() {
+            @Override
+            public void onResponse(Call<PostsList> call, Response<PostsList> response) {
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "onResponse: succesful");
+                    postsList = new PostsList(response.body());
+                    Log.i(TAG, "onResponse: " + postsList.toString());
+                    recyclerView = (RecyclerView) rootview;
+                    adapter = new PostsAdapter(postsList.getPosts(),PostsFragment.this);
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    recyclerView.addItemDecoration(dividerItemDecoration);
+
+                } else {
+                    Log.i(TAG, "onResponse: not that succesful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostsList> call, Throwable t) {
+                Log.i(TAG, "onFailure: Posts call Failed" + t.getMessage());}
+        });
+    }
+    //Fin de region API
+
+    @Override
+    public void clickPost(int position) {
+        Log.i(TAG, "clickPost: Clicked");
+        mListener.onListFragmentInteraction(postsList.getPosts().get(position));
     }
 }
