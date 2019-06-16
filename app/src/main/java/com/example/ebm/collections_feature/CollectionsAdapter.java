@@ -46,18 +46,19 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionsAdapter.
 
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView title;
-        public TextView subtitle;
-        public ImageView backgroundImage;
+        TextView title;
+        TextView subtitle;
+        ImageView backgroundImage;
 
-        public ItemViewHolder(@NonNull View itemView) {
+        ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             subtitle = itemView.findViewById(R.id.subtitle);
             backgroundImage = itemView.findViewById(R.id.bg_image);
+            backgroundImage.setOnClickListener(this);
         }
 
-        public void bind(CollecPH collecPH) {
+        void bind(CollecPH collecPH) {
             title.setText(collecPH.getName());
             subtitle.setText(collecPH.getTitle());
             String url = collecPH.getBackground_image_url();
