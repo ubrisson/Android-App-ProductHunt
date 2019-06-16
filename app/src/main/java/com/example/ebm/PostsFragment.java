@@ -2,24 +2,20 @@ package com.example.ebm;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.ebm.API.APIClient;
 import com.example.ebm.API.APIInterface;
-import com.example.ebm.modele.PostsList;
 import com.example.ebm.modele.Post;
-
-import java.util.List;
+import com.example.ebm.modele.PostsList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,18 +71,6 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         dividerItemDecoration.setDrawable(
                 this.getResources().getDrawable(R.drawable.sk_line_divider,getActivity().getTheme()));
 
-        /*
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new PostsAdapter(posts,this));
-        }*/
         return rootview;
     }
 
@@ -153,7 +137,14 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
 
     @Override
     public void clickPost(int position) {
-        Log.i(TAG, "clickPost: Clicked");
+        Log.i(TAG, "clickPost: Clicked post");
         mListener.onListFragmentInteraction(postsList.getPosts().get(position));
+        //TODO Lancer écran liste de commentaires
+    }
+
+    @Override
+    public void clickComm(int position) {
+        Log.i(TAG, "clickComm: Clicked comm");
+        //TODO lancer écran liste de commentaires
     }
 }

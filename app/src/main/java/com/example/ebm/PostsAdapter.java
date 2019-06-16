@@ -1,18 +1,19 @@
 package com.example.ebm;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.ebm.modele.Post;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Locale;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
@@ -58,11 +59,16 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         TextView title;
         TextView subtitle;
         ImageView thumbnail;
+        TextView nbCom;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
+            title.setOnClickListener(this);
             subtitle = itemView.findViewById(R.id.subtitle);
+            subtitle.setOnClickListener(this);
+            nbCom = itemView.findViewById(R.id.nbCommentaires);
+            nbCom.setOnClickListener(this);
             thumbnail = itemView.findViewById(R.id.bg_image);
             thumbnail.setOnClickListener(this);
         }
@@ -70,13 +76,17 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         void bind(Post post) {
             title.setText(post.getTitle());
             subtitle.setText(post.getSubTitle());
+            nbCom.setText(String.format(Locale.FRANCE,"%d commentaires", post.getNbCom()));
             String url = post.getImageUrl();
             Picasso.get().load(url).into(thumbnail);
         }
 
         @Override
         public void onClick(View v) {
-            listener.clickPost(getAdapterPosition());
+            if (v.getId() == R.id.nbCommentaires)
+                listener.clickComm(getAdapterPosition());
+            else
+                listener.clickPost(getAdapterPosition());
         }
     }
 
@@ -86,5 +96,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
      */
     public interface onClickPostListener{
         void clickPost(int position);
+        void clickComm(int position);
     }
 }

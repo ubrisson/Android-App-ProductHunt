@@ -12,7 +12,8 @@ public class Post {
     @SerializedName("tagline")
     private String subTitle;
 
-    private int votes_count;
+    @SerializedName("votes_count")
+    private int nbCom;
 
     private Thumbnail thumbnail;
 
@@ -53,12 +54,12 @@ public class Post {
         return id;
     }
 
-    public int getVotes_count() {
-        return votes_count;
+    public int getNbCom() {
+        return nbCom;
     }
 
-    public void setVotes_count(int votes_count) {
-        this.votes_count = votes_count;
+    public void setNbCom(int nbCom) {
+        this.nbCom = nbCom;
     }
 
     public Thumbnail getThumbnail() {
