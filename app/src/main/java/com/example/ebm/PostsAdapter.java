@@ -22,6 +22,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     /* Écouteur d'évènement */
     private PostsAdapter.onClickPostListener listener;
 
+    public PostsAdapter() {
+    }
+
     public PostsAdapter(List<Post> lesPosts, PostsAdapter.onClickPostListener clickPostListener) {
         this.lesPosts = lesPosts;
         this.listener = clickPostListener;

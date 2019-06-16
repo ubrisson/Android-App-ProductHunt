@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ebm.API.APIClient;
 import com.example.ebm.API.APIInterface;
@@ -38,6 +39,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     private DividerItemDecoration dividerItemDecoration;
     private PostsList postsList;
     private View rootview;
+    private SwipeRefreshLayout swipeContainer;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,7 +59,6 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -70,6 +71,20 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         dividerItemDecoration.setDrawable(
                 this.getResources().getDrawable(R.drawable.sk_line_divider,getActivity().getTheme()));
+
+        swipeContainer = (SwipeRefreshLayout) rootview;
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                recupererPostsList();
+            }
+        });
+
+
+        recyclerView = rootview.findViewById(R.id.list);
+        recupererPostsList(); //TODO Get Posts from databse here
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         return rootview;
     }
@@ -117,12 +132,10 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
                     Log.i(TAG, "onResponse: succesful");
                     postsList = new PostsList(response.body());
                     Log.i(TAG, "onResponse: " + postsList.toString());
-                    recyclerView = (RecyclerView) rootview;
                     adapter = new PostsAdapter(postsList.getPosts(),PostsFragment.this);
                     recyclerView.setAdapter(adapter);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    recyclerView.addItemDecoration(dividerItemDecoration);
-
+                    adapter.notifyDataSetChanged();
+                    swipeContainer.setRefreshing(false);
                 } else {
                     Log.i(TAG, "onResponse: not that succesful");
                 }
