@@ -12,7 +12,7 @@ public class Post {
     @SerializedName("tagline")
     private String subTitle;
 
-    @SerializedName("votes_count")
+    @SerializedName("comments_count")
     private int nbCom;
 
     private Thumbnail thumbnail;
