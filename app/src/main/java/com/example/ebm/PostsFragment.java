@@ -141,7 +141,8 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
                     Log.i(TAG, "onResponse: succesful");
                     CollecResponse collection = new CollecResponse(response.body());
                     Log.i(TAG, "onResponse: " + collection.getCollection().getName());
-                    adapter = new PostsAdapter(collection.getCollection().getPosts(), PostsFragment.this);
+                    postsList.setPosts(collection.getCollection().getPosts());
+                    adapter = new PostsAdapter(postsList.getPosts(), PostsFragment.this);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
@@ -187,7 +188,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     public void clickPost(int position) {
         Log.i(TAG, "clickPost: Clicked post");
         mListener.onListFragmentInteraction(postsList.getPosts().get(position));
-        //TODO Lancer écran detailPost
+
     }
 
     @Override

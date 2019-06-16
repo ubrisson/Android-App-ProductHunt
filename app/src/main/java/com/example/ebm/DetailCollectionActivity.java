@@ -1,5 +1,6 @@
 package com.example.ebm;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -63,5 +64,8 @@ public class DetailCollectionActivity extends AppCompatActivity implements Posts
     @Override
     public void onListFragmentInteraction(Post post) {
         Log.i(TAG, "onListFragmentInteraction: clicked" + post.getTitle());
+        Intent postIntent = new Intent(this,PostDetailActivity.class);
+        postIntent.putExtra("postUrl", post.getPostUrl());
+        startActivity(postIntent);
     }
 }
