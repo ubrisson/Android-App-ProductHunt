@@ -29,8 +29,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     @NonNull
     @Override
     public PostsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         return new PostsAdapter.ViewHolder(LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.post,parent,false));
+                inflate(viewType,parent,false));
     }
 
     @Override
@@ -41,6 +42,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return lesPosts.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return R.layout.post_header;
+        } else {
+            return R.layout.post;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
