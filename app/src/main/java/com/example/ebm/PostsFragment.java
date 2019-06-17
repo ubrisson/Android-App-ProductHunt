@@ -24,6 +24,7 @@ import com.example.ebm.modele.CollecResponse;
 import com.example.ebm.modele.Post;
 import com.example.ebm.modele.PostsList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -52,7 +53,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     private PostsDatabase database;
 
     private ExecutorService dbExecutor = Executors.newSingleThreadExecutor();
-    private Initialisation initialisation = new Initialisation();
+    private View rootview;
 
 
     /**
@@ -76,16 +77,21 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         if (getArguments() != null) {
             mIdCollection = getArguments().getInt(ARG_ID_COLLEC);
         }
-        database = PostsDatabase.getInstance(getContext());
-        initialisation.execute("");
-        if (mIdCollection != -1){
-            updatePosts();
+        Log.i(TAG, "onCreate: idCollec " + mIdCollection);
+        if (mIdCollection == -1) {
+            database = PostsDatabase.getInstance(getContext());
+            InitAllPostsWithDB initAllPostsWithDB = new InitAllPostsWithDB();
+            initAllPostsWithDB.execute("");
         }
+        else{
+            recupererCollectionPosts();
+        }
+
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.posts_list, container, false);
+        rootview = inflater.inflate(R.layout.posts_list, container, false);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(Objects.requireNonNull(getContext()), LinearLayoutManager.VERTICAL);
         dividerItemDecoration.setDrawable(
@@ -94,6 +100,8 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         recyclerView = rootview.findViewById(R.id.list);
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setVisibility(View.INVISIBLE);
+        Log.i(TAG, "onCreateView: Invisible RecyclerView");
 
         swipeContainer = (SwipeRefreshLayout) rootview;
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -102,9 +110,6 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
                 updatePosts();
             }
         });
-
-
-
         return rootview;
     }
 
@@ -158,6 +163,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
                     CollecResponse collection = new CollecResponse(response.body());
                     Log.i(TAG, "onResponse: " + collection.getCollection().getName());
                     convertPostAPI(collection.getCollection().getPosts());
+                    initCollection();
                     Log.i(TAG, "onResponse: succesful");
                 } else {
                     Log.i(TAG, "onResponse: not that succesful");
@@ -230,7 +236,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
 
 
     @SuppressLint("StaticFieldLeak")
-    private class Initialisation extends AsyncTask<String, Void, String> {
+    private class InitAllPostsWithDB extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -244,9 +250,22 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
                 @Override
                 public void run() {
                     recyclerView.setAdapter(adapter);
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
             });
         }
+    }
+
+    private void initCollection(){
+        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter = new PostsAdapter(postsList, PostsFragment.this);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setVisibility(View.VISIBLE);
+                Log.i(TAG, "run: post execute and view is visible");
+            }
+        });
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -277,10 +296,16 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
 
 
     private void convertPostAPI(List<Post> posts) {
-        postsList.clear();
+        Log.i(TAG, "convertPostAPI: converions start");
+        if (postsList != null)
+                postsList.clear();
+        else
+            postsList = new ArrayList<>(0);
         for (Post p : posts) {
             postsList.add(new PostDB(p));
         }
+
+        Log.i(TAG, "convertPostAPI: " + postsList.isEmpty());
     }
 
 
