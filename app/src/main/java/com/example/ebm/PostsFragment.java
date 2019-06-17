@@ -2,6 +2,7 @@ package com.example.ebm;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -209,7 +210,10 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     @Override
     public void clickComm(int position) {
         Log.i(TAG, "clickComm: Clicked comm");
-        //TODO lancer écran liste de commentaires
+        Intent intent = new Intent(getActivity(), CommentsActivity.class);
+        intent.putExtra("idPost",postsList.get(position).getId());
+        intent.putExtra("titlePost",postsList.get(position).getTitle());
+        startActivity(intent);
     }
 
     //Start region database

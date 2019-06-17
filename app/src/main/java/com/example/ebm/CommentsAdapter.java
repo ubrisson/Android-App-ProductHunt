@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ebm.modele.Comment;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 
 class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ItemViewHolder> {
     /* La liste à afficher */
-    private List<Comment> lesComments;
+    private ArrayList<Comment> lesComments;
 
-    public CommentsAdapter(List<Comment> lesComments) {
+    public CommentsAdapter(ArrayList<Comment> lesComments) {
         this.lesComments = lesComments;
     }
 
