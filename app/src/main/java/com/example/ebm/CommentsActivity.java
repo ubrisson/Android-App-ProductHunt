@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ebm.API.APIClient;
 import com.example.ebm.API.APIInterface;
@@ -30,6 +31,7 @@ public class CommentsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CommentsAdapter adapter;
     private String TAG = "CommentsActivity";
+    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +58,14 @@ public class CommentsActivity extends AppCompatActivity {
         adapter = new CommentsAdapter(comments);
         recyclerView.setAdapter(adapter);
         recupererComments();
+
+        swipeContainer = findViewById(R.id.swipeContainerComments);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                recupererComments();
+            }
+        });
     }
 
     //Debut de region API
@@ -68,10 +78,9 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Comments> call, Response<Comments> response) {
                 if (response.isSuccessful()) {
-                    comments = new Comments(response.body()).getComments();
-                    adapter = new CommentsAdapter(comments);
-                    recyclerView.setAdapter(adapter);
-                    Log.i(TAG, "onResponse: " + comments.get(0).getId());
+                    comments.addAll(response.body().getComments());
+                    adapter.notifyDataSetChanged();
+                    swipeContainer.setRefreshing(false);
                     Log.i(TAG, "onResponse: succesful");
 
                 } else {
