@@ -26,9 +26,10 @@
             android:name=".CollectionsActivity"
             android:launchMode="singleTask"/>
         <activity
-            android:name=".DetailCollectionActivity"/>
+            android:name=".CollectionDetailActivity"/>
         <activity
             android:name=".PostDetailActivity"/>
+        <activity android:name=".CommentsActivity" />
     </application>
 
 </manifest>

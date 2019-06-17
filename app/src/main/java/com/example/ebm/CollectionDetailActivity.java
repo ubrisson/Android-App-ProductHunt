@@ -14,10 +14,10 @@ import com.example.ebm.database.PostDB;
 
 import java.util.Objects;
 
-public class DetailCollectionActivity extends AppCompatActivity implements PostsFragment.OnListFragmentInteractionListener {
+public class CollectionDetailActivity extends AppCompatActivity implements PostsFragment.OnListFragmentInteractionListener {
 
     private PostsFragment fragment;
-    private String TAG = "DetailCollectionActivity";
+    private String TAG = "CollectionDetailActivity";
     int idCollection;
 
     @Override

@@ -84,7 +84,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     @Override
     public void clickCollec(int position) {
         Log.i(TAG, "clickCollec: Clicked");
-        Intent detailCollecIntent = new Intent(this,DetailCollectionActivity.class);
+        Intent detailCollecIntent = new Intent(this, CollectionDetailActivity.class);
         detailCollecIntent.putExtra("idCollection", collectionsList.getCollections().get(position).getId());
         startActivity(detailCollecIntent);
     }
