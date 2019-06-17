@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.example.ebm.modele.Post;
+import com.example.ebm.database.PostDB;
 
 public class MainActivity extends BaseDrawerActivity
         implements PostsFragment.OnListFragmentInteractionListener {
@@ -36,7 +36,7 @@ public class MainActivity extends BaseDrawerActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            fragment.recupererPostsList();
+            fragment.updatePosts();
             return true;
         }
 
@@ -45,7 +45,7 @@ public class MainActivity extends BaseDrawerActivity
 
 
     @Override
-    public void onListFragmentInteraction(Post post) {
+    public void onListFragmentInteraction(PostDB post) {
         Log.i(TAG, "onListFragmentInteraction: clicked" + post.getTitle());
         Intent postIntent = new Intent(this,PostDetailActivity.class);
         postIntent.putExtra("postUrl", post.getPostUrl());

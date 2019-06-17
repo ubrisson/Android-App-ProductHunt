@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.ebm.modele.Post;
+import com.example.ebm.database.PostDB;
 
 import java.util.Objects;
 
@@ -55,7 +55,7 @@ public class DetailCollectionActivity extends AppCompatActivity implements Posts
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            fragment.recupererPostsAPI();
+            fragment.updatePosts();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -63,7 +63,7 @@ public class DetailCollectionActivity extends AppCompatActivity implements Posts
 
 
     @Override
-    public void onListFragmentInteraction(Post post) {
+    public void onListFragmentInteraction(PostDB post) {
         Log.i(TAG, "onListFragmentInteraction: clicked" + post.getTitle());
         Intent postIntent = new Intent(this,PostDetailActivity.class);
         postIntent.putExtra("postUrl", post.getPostUrl());

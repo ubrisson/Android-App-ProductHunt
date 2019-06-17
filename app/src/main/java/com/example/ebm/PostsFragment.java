@@ -1,12 +1,15 @@
 package com.example.ebm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +25,7 @@ import com.example.ebm.modele.Post;
 import com.example.ebm.modele.PostsList;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -43,13 +47,12 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     private String TAG = "PostsFragment";
     private RecyclerView recyclerView;
     private PostsAdapter adapter;
-    private DividerItemDecoration dividerItemDecoration;
-    private List<Post> postsList;
-    private View rootview;
+    private List<PostDB> postsList;
     private SwipeRefreshLayout swipeContainer;
     private PostsDatabase database;
 
-    private ExecutorService instant = Executors.newSingleThreadExecutor();
+    private ExecutorService dbExecutor = Executors.newSingleThreadExecutor();
+    private Initialisation initialisation = new Initialisation();
 
 
     /**
@@ -73,38 +76,37 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         if (getArguments() != null) {
             mIdCollection = getArguments().getInt(ARG_ID_COLLEC);
         }
-
         database = PostsDatabase.getInstance(getContext());
+        initialisation.execute("");
+        if (mIdCollection != -1){
+            updatePosts();
+        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootview = inflater.inflate(R.layout.posts_list, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootview = inflater.inflate(R.layout.posts_list, container, false);
 
-        dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(Objects.requireNonNull(getContext()), LinearLayoutManager.VERTICAL);
         dividerItemDecoration.setDrawable(
-                this.getResources().getDrawable(R.drawable.sk_line_divider,getActivity().getTheme()));
+                this.getResources().getDrawable(R.drawable.sk_line_divider, Objects.requireNonNull(getActivity()).getTheme()));
+
+        recyclerView = rootview.findViewById(R.id.list);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         swipeContainer = (SwipeRefreshLayout) rootview;
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                recupererPostsAPI();
+                updatePosts();
             }
         });
 
 
-        recyclerView = rootview.findViewById(R.id.list);
-        recupererPostsDB(); //TODO Get Posts from databse here
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(dividerItemDecoration);
 
         return rootview;
     }
-
-
-
 
     @Override
     public void onAttach(Context context) {
@@ -134,11 +136,11 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Post post);
+        void onListFragmentInteraction(PostDB post);
     }
 
     //Debut de region API
-    public void recupererPostsAPI(){
+    private void recupererPostsAPI(){
         if(mIdCollection == -1)
             recupererPostsList();
         else
@@ -155,11 +157,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
                 if (response.isSuccessful()) {
                     CollecResponse collection = new CollecResponse(response.body());
                     Log.i(TAG, "onResponse: " + collection.getCollection().getName());
-                    postsList = collection.getCollection().getPosts();
-                    adapter = new PostsAdapter(postsList, PostsFragment.this);
-                    recyclerView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
-                    swipeContainer.setRefreshing(false);
+                    convertPostAPI(collection.getCollection().getPosts());
                     Log.i(TAG, "onResponse: succesful");
                 } else {
                     Log.i(TAG, "onResponse: not that succesful");
@@ -171,7 +169,9 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         });
     }
 
-    public void recupererPostsList(){
+
+
+    private void recupererPostsList(){
         APIInterface api = APIClient.createService(APIInterface.class);
         Call<PostsList> call;
         call = api.appelPosts();
@@ -180,11 +180,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
             @Override
             public void onResponse(Call<PostsList> call, Response<PostsList> response) {
                 if (response.isSuccessful()) {
-                    postsList = new PostsList(response.body()).getPosts();
-                    adapter = new PostsAdapter(postsList, PostsFragment.this);
-                    recyclerView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
-                    swipeContainer.setRefreshing(false);
+                    updateDBwithAPI(response.body().getPosts());
                     Log.i(TAG, "onResponse: succesful");
                 } else {
                     Log.i(TAG, "onResponse: not that succesful");
@@ -212,32 +208,80 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
 
     //Start region database
     private void recupererPostsDB() {
-        instant.execute(new Runnable() {
-            @Override
-            public void run() {
-                List<PostDB> listdb = database.postDAO().getPostsList();
-                if(listdb.isEmpty())
-                    populatePostsDB();
-                for (PostDB p: listdb) { 
-                    postsList.add(new Post(p));
-                }
-                
-            }
-        });
+        postsList = database.postDAO().getPostsList();
+        adapter = new PostsAdapter(postsList, PostsFragment.this);
         
     }
 
-    private void updatePostsDB(){
+    private void updateDBwithAPI(final List<Post> posts){
+        dbExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                for (Post p : posts) {
+                    database.postDAO().insertPost(new PostDB(p));
+                }
+                postsList = database.postDAO().getPostsList();
 
-    }
+            }
+        });
 
-    private void populatePostsDB(){
-        Log.i(TAG, "populatePostsDB: ");
     }
     //End region database
 
 
+    @SuppressLint("StaticFieldLeak")
+    private class Initialisation extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected String doInBackground(String... params) {
+            recupererPostsDB();
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerView.setAdapter(adapter);
+                }
+            });
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class Update extends AsyncTask<String, Void, List<PostDB>> {
+
+        @Override
+        protected List<PostDB> doInBackground(String... params) {
+            recupererPostsAPI();
+            return postsList;
+        }
+
+        @Override
+        protected void onPostExecute(final List<PostDB> posts) {
+            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.show(posts);
+                    swipeContainer.setRefreshing(false);
+                }
+            });
+        }
+    }
+
+    public void updatePosts(){
+        Update update = new Update();
+        update.execute();
+    }
+
+
+    private void convertPostAPI(List<Post> posts) {
+        postsList.clear();
+        for (Post p : posts) {
+            postsList.add(new PostDB(p));
+        }
+    }
 
 
 }

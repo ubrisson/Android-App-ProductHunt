@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ebm.modele.Post;
+import com.example.ebm.database.PostDB;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -18,14 +18,15 @@ import java.util.Locale;
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
     /* La liste à afficher */
-    private List<Post> lesPosts;
+    private List<PostDB> lesPosts;
     /* Écouteur d'évènement */
+
     private PostsAdapter.onClickPostListener listener;
 
     public PostsAdapter() {
     }
 
-    public PostsAdapter(List<Post> lesPosts, PostsAdapter.onClickPostListener clickPostListener) {
+    public PostsAdapter(List<PostDB> lesPosts, PostsAdapter.onClickPostListener clickPostListener) {
         this.lesPosts = lesPosts;
         this.listener = clickPostListener;
     }
@@ -76,7 +77,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             thumbnail.setOnClickListener(this);
         }
 
-        void bind(Post post) {
+        void bind(PostDB post) {
             title.setText(post.getTitle());
             subtitle.setText(post.getSubTitle());
             nbCom.setText(String.format(Locale.FRANCE,"%d commentaires", post.getNbCom()));
@@ -93,7 +94,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         }
     }
 
-
+    public void show(List<PostDB> posts){
+        lesPosts = posts;
+        notifyDataSetChanged();
+    }
     /**
      * Interface permettant de gérer le clic sur un élément
      */

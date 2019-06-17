@@ -3,6 +3,7 @@ package com.example.ebm.database;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -13,11 +14,11 @@ public interface PostDAO {
     @Query("Select * from posts")
     List<PostDB> getPostsList();
 
-    @Insert
-    void insertPost(PostDB postDB);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertPosts(PostDB... postsDB);
 
-    @Insert
-    void insertAll(List<PostDB> listPostDB);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertPost(PostDB postDB);
 
     @Update
     void updatePost(PostDB postDB);
