@@ -14,7 +14,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/headline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/username_twitter_tag"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/username_twitter_tag"
