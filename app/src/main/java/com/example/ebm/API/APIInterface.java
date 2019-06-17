@@ -2,6 +2,7 @@ package com.example.ebm.API;
 
 import com.example.ebm.modele.CollecResponse;
 import com.example.ebm.modele.CollectionsList;
+import com.example.ebm.modele.Comments;
 import com.example.ebm.modele.PostsList;
 
 import retrofit2.Call;
@@ -27,4 +28,9 @@ public interface APIInterface {
             "Authorization: Bearer 46a03e1c32ea881c8afb39e59aa17c936ff4205a8ed418f525294b2b45b56abb"})
     @GET("collections/{idCollection}")
     Call<CollecResponse> appelPostsCollec(@Path("idCollection") int idCollection);
+
+    @Headers({"Accept: application/json", "Content-Type: application/json", "Host: api.producthunt.com",
+            "Authorization: Bearer 46a03e1c32ea881c8afb39e59aa17c936ff4205a8ed418f525294b2b45b56abb"})
+    @GET("posts/{idPost}/comments")
+    Call<Comments> appelComments(@Path("idPost") int idPost);
 }
