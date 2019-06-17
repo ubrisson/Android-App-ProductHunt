@@ -1,5 +1,11 @@
 package com.example.ebm;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +32,7 @@ class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ItemViewHolde
     @Override
     public CommentsAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new CommentsAdapter.ItemViewHolder(LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.comment,parent,false));
+                inflate(R.layout.comment, parent, false));
     }
 
     @Override
@@ -39,7 +45,7 @@ class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ItemViewHolde
         return lesComments.size();
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder{
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
 
         TextView name_tag;
         TextView headline;
@@ -59,8 +65,41 @@ class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ItemViewHolde
             headline.setText(comment.getUserHeadline());
             body.setText(comment.getBody());
             String url = comment.getUserPic();
-            Picasso.get().load(url).fit().into(userPic);
+            Picasso.get().load(url).transform(new RoundedTransformation(100, 0)).fit().into(userPic);
         }
 
+        public class RoundedTransformation implements com.squareup.picasso.Transformation {
+            private final int radius;
+            private final int margin;
+
+            public RoundedTransformation(final int radius, final int margin) {
+                this.radius = radius;
+                this.margin = margin;
+            }
+
+            @Override
+            public Bitmap transform(final Bitmap source) {
+                final Paint paint = new Paint();
+                paint.setAntiAlias(true);
+                paint.setShader(new BitmapShader(source, Shader.TileMode.CLAMP,
+                        Shader.TileMode.CLAMP));
+
+                Bitmap output = Bitmap.createBitmap(source.getWidth(), source.getHeight(),
+                        Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(output);
+                canvas.drawRoundRect(new RectF(margin, margin, source.getWidth() - margin,
+                        source.getHeight() - margin), radius, radius, paint);
+
+                if (source != output) {
+                    source.recycle();
+                }
+                return output;
+            }
+
+            @Override
+            public String key() {
+                return "rounded(r=" + radius + ", m=" + margin + ")";
+            }
+        }
     }
 }

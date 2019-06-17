@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 class UserPic {
 
-    @SerializedName("40px")
+    @SerializedName("original")
     private String image_url;
 
     public String getImage_url() {
