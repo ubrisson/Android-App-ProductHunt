@@ -7,6 +7,9 @@ import java.util.List;
 public class PostsList {
     private List<Post> posts;
 
+    public PostsList() {
+    }
+
     public PostsList(PostsList postsList) {
         this.posts = postsList.posts;
     }

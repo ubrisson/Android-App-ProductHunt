@@ -27,6 +27,7 @@ public class DetailCollectionActivity extends AppCompatActivity implements Posts
         setContentView(R.layout.detail_collec_layout);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Collection's posts");
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
 

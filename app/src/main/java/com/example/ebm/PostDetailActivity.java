@@ -26,6 +26,7 @@ public class PostDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_detail_activity);
         toolbar = findViewById(R.id.toolbarPost);
+        toolbar.setTitle("Post's details");
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
 

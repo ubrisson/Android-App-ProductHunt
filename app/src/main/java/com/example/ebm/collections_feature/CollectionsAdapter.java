@@ -62,7 +62,7 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionsAdapter.
             title.setText(collecPH.getName());
             subtitle.setText(collecPH.getTitle());
             String url = collecPH.getBackground_image_url();
-            Picasso.get().load(url).into(backgroundImage);
+            Picasso.get().load(url).fit().into(backgroundImage);
         }
 
         @Override

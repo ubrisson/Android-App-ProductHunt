@@ -63,6 +63,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         if (getArguments() != null) {
             mIdCollection = getArguments().getInt(ARG_ID_COLLEC);
         }
+        postsList = new PostsList();
     }
 
     @Override
@@ -188,7 +189,6 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     public void clickPost(int position) {
         Log.i(TAG, "clickPost: Clicked post");
         mListener.onListFragmentInteraction(postsList.getPosts().get(position));
-
     }
 
     @Override

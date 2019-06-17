@@ -1,13 +1,15 @@
 package com.example.ebm;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ebm.API.APIClient;
@@ -21,36 +23,28 @@ import retrofit2.Response;
 
 public class CollectionsActivity extends BaseDrawerActivity implements CollectionsAdapter.onClickCollecListener {
 
-    private String TAG = "CollectionsActivity";
+    private String TAG = "Collections";
     private CollectionsList collectionsList;
     private RecyclerView recyclerView;
     private CollectionsAdapter adapter;
-    private DividerItemDecoration dividerItemDecoration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
+        getSupportActionBar().setTitle(TAG);
         FrameLayout contentFrameLayout = findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.collections_main, contentFrameLayout);
 
-        dividerItemDecoration = new DividerItemDecoration(CollectionsActivity.this,
-                LinearLayoutManager.VERTICAL);
-        dividerItemDecoration.setDrawable(
-                this.getResources().getDrawable(R.drawable.sk_line_divider,this.getTheme()));
+
+        recupererCollectionsList();
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
+        if (item.getItemId() == R.id.action_refresh) {
             recupererCollectionsList();
             return true;
         }
@@ -72,9 +66,9 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                     recyclerView = findViewById(R.id.recyclerView);
                     adapter = new CollectionsAdapter(collectionsList.getCollections(),CollectionsActivity.this);
                     recyclerView.setAdapter(adapter);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(CollectionsActivity.this));
-                    recyclerView.addItemDecoration(dividerItemDecoration);
-
+                    recyclerView.setLayoutManager(new GridLayoutManager(CollectionsActivity.this,2));
+                    recyclerView.addItemDecoration( new MarginItemDecoration(
+                            (int) getResources().getDimension(R.dimen.default_padding) ));
                 } else {
                     Log.i(TAG, "onResponse: not that succesful");
                 }
@@ -94,4 +88,29 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         detailCollecIntent.putExtra("idCollection", collectionsList.getCollections().get(position).getId());
         startActivity(detailCollecIntent);
     }
+
+
+    class MarginItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spaceHeight;
+
+        MarginItemDecoration(int spaceHeight) {
+            this.spaceHeight = spaceHeight;
+        }
+
+        @SuppressWarnings("SuspiciousNameCombination")
+        @Override
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
+                                   @NonNull RecyclerView parent, @NonNull RecyclerView.State state){
+            if (parent.getChildAdapterPosition(view) <= 1  ){
+                outRect.top = spaceHeight;
+            }
+            if(parent.getChildAdapterPosition(view) % 2 == 1){
+                outRect.right = spaceHeight;
+            }
+            outRect.bottom = spaceHeight;
+            outRect.left = spaceHeight;
+        }
+    }
+
 }

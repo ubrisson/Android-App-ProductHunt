@@ -12,13 +12,14 @@ public class MainActivity extends BaseDrawerActivity
         implements PostsFragment.OnListFragmentInteractionListener {
 
     private PostsFragment fragment;
-    private String TAG = "MainActivity";
+    private String TAG = "Posts";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
+        getSupportActionBar().setTitle(TAG);
         FrameLayout contentFrameLayout = findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.fragment_main, contentFrameLayout);
 
