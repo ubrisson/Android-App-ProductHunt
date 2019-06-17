@@ -6,22 +6,23 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.ebm.modele.Post;
-
 import java.util.List;
 
 @Dao
 public interface PostDAO {
     @Query("Select * from posts")
-    List<Post> getPostsList();
+    List<PostDB> getPostsList();
 
     @Insert
-    void insertPost();
+    void insertPost(PostDB postDB);
+
+    @Insert
+    void insertAll(List<PostDB> listPostDB);
 
     @Update
-    void updatePost();
+    void updatePost(PostDB postDB);
 
     @Delete
-    void deletePost();
+    void deletePost(PostDB postDB);
 
 }

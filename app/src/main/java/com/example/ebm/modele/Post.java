@@ -1,5 +1,6 @@
 package com.example.ebm.modele;
 
+import com.example.ebm.database.PostDB;
 import com.google.gson.annotations.SerializedName;
 
 public class Post {
@@ -74,18 +75,12 @@ public class Post {
         return thumbnail.getImage_url();
     }
 
-    /*
-  public ContentValues toContentValues() {
-
-
-    ContentValues contentValues = new ContentValues();
-    contentValues.put(DataBaseContract.PostTable.ID_COLUMN, id);
-    contentValues.put(DataBaseContract.PostTable.TITLE_COLUMN, title);
-    contentValues.put(DataBaseContract.PostTable.SUBTITLE_COLUMN, subTitle);
-    contentValues.put(DataBaseContract.PostTable.IMAGE_URL_COLUMN, imageUrl);
-    contentValues.put(DataBaseContract.PostTable.POST_URL_COLUMN, postUrl);
-    return contentValues;
-  }
-*/
-
+    public Post(PostDB post) {
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.subTitle = post.getSubTitle();
+        this.nbCom = post.getNbCom();
+        this.thumbnail = new Thumbnail(post.getImageUrl());
+        this.postUrl = post.getPostUrl();
+    }
 }

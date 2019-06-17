@@ -15,9 +15,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ebm.API.APIClient;
 import com.example.ebm.API.APIInterface;
+import com.example.ebm.database.PostDB;
+import com.example.ebm.database.PostsDatabase;
 import com.example.ebm.modele.CollecResponse;
 import com.example.ebm.modele.Post;
 import com.example.ebm.modele.PostsList;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,9 +44,13 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     private RecyclerView recyclerView;
     private PostsAdapter adapter;
     private DividerItemDecoration dividerItemDecoration;
-    private PostsList postsList;
+    private List<Post> postsList;
     private View rootview;
     private SwipeRefreshLayout swipeContainer;
+    private PostsDatabase database;
+
+    private ExecutorService instant = Executors.newSingleThreadExecutor();
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -63,7 +73,8 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         if (getArguments() != null) {
             mIdCollection = getArguments().getInt(ARG_ID_COLLEC);
         }
-        postsList = new PostsList();
+
+        database = PostsDatabase.getInstance(getContext());
     }
 
     @Override
@@ -78,18 +89,21 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                recupererPosts();
+                recupererPostsAPI();
             }
         });
 
 
         recyclerView = rootview.findViewById(R.id.list);
-        recupererPosts(); //TODO Get Posts from databse here
+        recupererPostsDB(); //TODO Get Posts from databse here
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         return rootview;
     }
+
+
 
 
     @Override
@@ -124,7 +138,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     }
 
     //Debut de region API
-    public void recupererPosts(){
+    public void recupererPostsAPI(){
         if(mIdCollection == -1)
             recupererPostsList();
         else
@@ -139,14 +153,14 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
             @Override
             public void onResponse(Call<CollecResponse> call, Response<CollecResponse> response) {
                 if (response.isSuccessful()) {
-                    Log.i(TAG, "onResponse: succesful");
                     CollecResponse collection = new CollecResponse(response.body());
                     Log.i(TAG, "onResponse: " + collection.getCollection().getName());
-                    postsList.setPosts(collection.getCollection().getPosts());
-                    adapter = new PostsAdapter(postsList.getPosts(), PostsFragment.this);
+                    postsList = collection.getCollection().getPosts();
+                    adapter = new PostsAdapter(postsList, PostsFragment.this);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
+                    Log.i(TAG, "onResponse: succesful");
                 } else {
                     Log.i(TAG, "onResponse: not that succesful");
                 }
@@ -166,13 +180,12 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
             @Override
             public void onResponse(Call<PostsList> call, Response<PostsList> response) {
                 if (response.isSuccessful()) {
-                    Log.i(TAG, "onResponse: succesful");
-                    postsList = new PostsList(response.body());
-                    Log.i(TAG, "onResponse: " + postsList.toString());
-                    adapter = new PostsAdapter(postsList.getPosts(), PostsFragment.this);
+                    postsList = new PostsList(response.body()).getPosts();
+                    adapter = new PostsAdapter(postsList, PostsFragment.this);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
+                    Log.i(TAG, "onResponse: succesful");
                 } else {
                     Log.i(TAG, "onResponse: not that succesful");
                 }
@@ -188,7 +201,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     @Override
     public void clickPost(int position) {
         Log.i(TAG, "clickPost: Clicked post");
-        mListener.onListFragmentInteraction(postsList.getPosts().get(position));
+        mListener.onListFragmentInteraction(postsList.get(position));
     }
 
     @Override
@@ -196,4 +209,35 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         Log.i(TAG, "clickComm: Clicked comm");
         //TODO lancer écran liste de commentaires
     }
+
+    //Start region database
+    private void recupererPostsDB() {
+        instant.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<PostDB> listdb = database.postDAO().getPostsList();
+                if(listdb.isEmpty())
+                    populatePostsDB();
+                for (PostDB p: listdb) { 
+                    postsList.add(new Post(p));
+                }
+                
+            }
+        });
+        
+    }
+
+    private void updatePostsDB(){
+
+    }
+
+    private void populatePostsDB(){
+        Log.i(TAG, "populatePostsDB: ");
+    }
+    //End region database
+
+
+
+
+
 }

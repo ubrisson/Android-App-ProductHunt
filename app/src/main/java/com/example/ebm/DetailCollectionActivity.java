@@ -55,7 +55,7 @@ public class DetailCollectionActivity extends AppCompatActivity implements Posts
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            fragment.recupererPosts();
+            fragment.recupererPostsAPI();
             return true;
         }
         return super.onOptionsItemSelected(item);
