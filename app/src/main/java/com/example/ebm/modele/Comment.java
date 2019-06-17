@@ -19,4 +19,46 @@ public class Comment {
     private ArrayList<Comment> child_comments;
 
 
+    public int getId() {
+        return id;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public int getParent_comment_id() {
+        return parent_comment_id;
+    }
+
+    public int getChild_comments_count() {
+        return child_comments_count;
+    }
+
+    public int getPost_id() {
+        return post_id;
+    }
+
+
+    public ArrayList<Comment> getChild_comments() {
+        return child_comments;
+    }
+
+    public int getUserId() {
+        return user.getId();
+    }
+
+    public String getUserNameTag() {
+        return user.getName() + " - " + user.getTwitter_username();
+    }
+
+    public String getUserHeadline() {
+        return user.getHeadline();
+    }
+
+
+
+    public String getUserPic() {
+        return user.getImage_url();
+    }
 }

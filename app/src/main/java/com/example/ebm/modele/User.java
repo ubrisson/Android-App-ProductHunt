@@ -12,4 +12,23 @@ class User {
 
     private UserPic image_url;
 
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getHeadline() {
+        return headline;
+    }
+
+    public String getTwitter_username() {
+        return twitter_username;
+    }
+
+    public String getImage_url() {
+        return image_url.getImage_url();
+    }
 }

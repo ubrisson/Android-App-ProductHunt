@@ -7,4 +7,7 @@ class UserPic {
     @SerializedName("40px")
     private String image_url;
 
+    public String getImage_url() {
+        return image_url;
+    }
 }
