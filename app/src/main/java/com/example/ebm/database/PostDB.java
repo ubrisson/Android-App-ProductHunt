@@ -27,6 +27,9 @@ public class PostDB {
     @ColumnInfo
     private String postUrl;
 
+    @ColumnInfo
+    private String created_at;
+
     public PostDB() {
     }
 
@@ -37,6 +40,7 @@ public class PostDB {
         this.nbCom = post.getNbCom();
         this.imageUrl = post.getImageUrl();
         this.postUrl = post.getPostUrl();
+        this.created_at = post.getDate();
     }
 
 
@@ -87,5 +91,13 @@ public class PostDB {
 
     public void setPostUrl(String postUrl) {
         this.postUrl = postUrl;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 }

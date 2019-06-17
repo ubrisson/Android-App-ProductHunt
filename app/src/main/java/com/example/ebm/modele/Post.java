@@ -21,6 +21,9 @@ public class Post {
     @SerializedName("redirect_url")
     private String postUrl;
 
+    @SerializedName("created_at")
+    private String date;
+
 
 
     public String getTitle() {
@@ -82,5 +85,13 @@ public class Post {
         this.nbCom = post.getNbCom();
         this.thumbnail = new Thumbnail(post.getImageUrl());
         this.postUrl = post.getPostUrl();
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

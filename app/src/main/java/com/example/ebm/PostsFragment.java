@@ -49,7 +49,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
     private String TAG = "PostsFragment";
     private RecyclerView recyclerView;
     private PostsAdapter adapter;
-    private List<PostDB> postsList;
+    private ArrayList<PostDB> postsList;
     private SwipeRefreshLayout swipeContainer;
     private PostsDatabase database;
 
@@ -79,6 +79,9 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
             mIdCollection = getArguments().getInt(ARG_ID_COLLEC);
         }
         Log.i(TAG, "onCreate: idCollec " + mIdCollection);
+
+        postsList = new ArrayList<>();
+
         if (mIdCollection == -1) {
             database = PostsDatabase.getInstance(getContext());
             InitAllPostsWithDB initAllPostsWithDB = new InitAllPostsWithDB();
@@ -218,7 +221,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
 
     //Start region database
     private void recupererPostsDB() {
-        postsList = database.postDAO().getPostsList();
+        postsList = (ArrayList<PostDB>) database.postDAO().getPostsList();
         adapter = new PostsAdapter(postsList, PostsFragment.this);
         
     }
@@ -230,7 +233,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
                 for (Post p : posts) {
                     database.postDAO().insertPost(new PostDB(p));
                 }
-                postsList = database.postDAO().getPostsList();
+                postsList = (ArrayList<PostDB>) database.postDAO().getPostsList();
 
             }
         });

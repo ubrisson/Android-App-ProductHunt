@@ -11,7 +11,7 @@ import java.util.List;
 
 @Dao
 public interface PostDAO {
-    @Query("Select * from posts")
+    @Query("Select * from posts order by created_at DESC")
     List<PostDB> getPostsList();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

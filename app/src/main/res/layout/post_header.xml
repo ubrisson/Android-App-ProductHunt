@@ -55,4 +55,14 @@
         app:layout_constraintTop_toBottomOf="@+id/subtitle"
         tools:text="999 commentaires" />
 
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/nbCommentaires"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/subtitle"
+        app:layout_constraintTop_toBottomOf="@+id/subtitle"
+        tools:text="2019-09-07T0000" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

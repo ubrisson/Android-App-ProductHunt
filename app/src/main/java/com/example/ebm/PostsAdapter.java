@@ -60,10 +60,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView title;
-        TextView subtitle;
-        ImageView thumbnail;
-        TextView nbCom;
+        private final TextView date;
+        private final TextView nbCom;
+        private final TextView title;
+        private final TextView subtitle;
+        private final ImageView thumbnail;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -75,12 +76,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             nbCom.setOnClickListener(this);
             thumbnail = itemView.findViewById(R.id.bg_image);
             thumbnail.setOnClickListener(this);
+            date = itemView.findViewById(R.id.date);
         }
 
         void bind(PostDB post) {
             title.setText(post.getTitle());
             subtitle.setText(post.getSubTitle());
             nbCom.setText(String.format(Locale.FRANCE,"%d commentaires", post.getNbCom()));
+            date.setText(post.getCreated_at().substring(0,10));
             String url = post.getImageUrl();
             Picasso.get().load(url).into(thumbnail);
         }
