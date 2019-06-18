@@ -8,6 +8,8 @@ public class Comment {
 
     private String body;
 
+    private String created_at;
+
     private int parent_comment_id;
 
     private int child_comments_count;
@@ -56,9 +58,11 @@ public class Comment {
         return user.getHeadline();
     }
 
-
-
     public String getUserPic() {
         return user.getImage_url();
+    }
+
+    public String getCreated_at() {
+        return created_at.substring(0,10) + " " + created_at.substring(11,16);
     }
 }

@@ -51,6 +51,7 @@ class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ItemViewHolde
         TextView headline;
         ImageView userPic;
         TextView body;
+        TextView commentDate;
 
         ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -58,12 +59,14 @@ class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ItemViewHolde
             headline = itemView.findViewById(R.id.headline);
             userPic = itemView.findViewById(R.id.user_image);
             body = itemView.findViewById(R.id.body);
+            commentDate = itemView.findViewById(R.id.com_date);
         }
 
         void bind(Comment comment) {
             name_tag.setText(comment.getUserNameTag());
             headline.setText(comment.getUserHeadline());
             body.setText(comment.getBody());
+            commentDate.setText(comment.getCreated_at());
             String url = comment.getUserPic();
             Picasso.get().load(url).transform(new RoundedTransformation(100, 0)).fit().into(userPic);
         }

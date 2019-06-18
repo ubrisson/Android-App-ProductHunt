@@ -27,11 +27,12 @@ public class CommentsActivity extends AppCompatActivity {
 
     private long idPost;
     private String titlePost;
-    private ArrayList<Comment> comments = new ArrayList<>();
+    private int idLastComment;
     private RecyclerView recyclerView;
     private CommentsAdapter adapter;
     private String TAG = "CommentsActivity";
     private SwipeRefreshLayout swipeContainer;
+    private ArrayList<Comment> comments = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class CommentsActivity extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                recupererComments();
+                recupererNouveauxComments();
             }
         });
     }
@@ -72,13 +73,12 @@ public class CommentsActivity extends AppCompatActivity {
     public void recupererComments(){
         APIInterface api = APIClient.createService(APIInterface.class);
         Call<Comments> call = api.appelComments(idPost,"created_at");
-        Log.i(TAG, "recupererComments: " + idPost);
-        Log.i(TAG, "recupererComments: " + call.request());
         call.enqueue(new Callback<Comments>() {
             @Override
             public void onResponse(Call<Comments> call, Response<Comments> response) {
                 if (response.isSuccessful()) {
                     comments.addAll(response.body().getComments());
+                    idLastComment = comments.get(comments.size()-1).getId();
                     adapter.notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
                     Log.i(TAG, "onResponse: succesful");
@@ -93,5 +93,29 @@ public class CommentsActivity extends AppCompatActivity {
                 Log.i(TAG, "onFailure: Collections call Failed" + t.getMessage());}
         });
     }
+
+    public void recupererNouveauxComments(){
+        APIInterface api = APIClient.createService(APIInterface.class);
+        Call<Comments> call = api.appelNewComments(idPost,idLastComment,"created_at");
+        call.enqueue(new Callback<Comments>() {
+            @Override
+            public void onResponse(Call<Comments> call, Response<Comments> response) {
+                if (response.isSuccessful()) {
+                    comments.addAll(response.body().getComments());
+                    idLastComment = comments.get(comments.size()-1).getId();
+                    adapter.notifyDataSetChanged();
+                    swipeContainer.setRefreshing(false);
+                    Log.i(TAG, "onResponse: succesful");
+                } else {
+                    Log.i(TAG, "onResponse: not that succesful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Comments> call, Throwable t) {
+                Log.i(TAG, "onFailure: Collections call Failed" + t.getMessage());}
+        });
+    }
+
     //Fin de region API
 }

@@ -52,4 +52,12 @@
         app:layout_constraintStart_toStartOf="@+id/user_image"
         app:layout_constraintTop_toBottomOf="@+id/headline"
         tools:text="If this delivers, it's the #1 prod" />
+
+    <TextView
+        android:id="@+id/com_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/body"
+        app:layout_constraintTop_toBottomOf="@+id/body"
+        tools:text="2019-10-15T0000" />
 </androidx.constraintlayout.widget.ConstraintLayout>
