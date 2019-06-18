@@ -77,7 +77,8 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Comments> call, Response<Comments> response) {
                 if (response.isSuccessful()) {
-                    comments.addAll(response.body().getComments());
+                    comments.addAll(unnest(response.body().getComments()));
+                    whatshappening();
                     idLastComment = comments.get(comments.size()-1).getId();
                     adapter.notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
@@ -101,7 +102,7 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Comments> call, Response<Comments> response) {
                 if (response.isSuccessful()) {
-                    comments.addAll(response.body().getComments());
+                    comments.addAll(unnest(response.body().getComments()));
                     idLastComment = comments.get(comments.size()-1).getId();
                     adapter.notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
@@ -118,4 +119,26 @@ public class CommentsActivity extends AppCompatActivity {
     }
 
     //Fin de region API
+
+    private void whatshappening(){
+        for (Comment c: comments) {
+            Log.i(TAG,  c.toString());
+        }
+
+    }
+
+    int depth = 0;
+    private ArrayList<Comment> unnest(ArrayList<Comment> list){
+        ArrayList<Comment> flatarray = new ArrayList<Comment>();
+        for (Comment parent:list) {
+            parent.setDepth(depth);
+            flatarray.add(parent);
+            if(!parent.getChild_comments().isEmpty()){
+                depth += 1;
+                flatarray.addAll(unnest(parent.getChild_comments()));
+                depth -=1;
+            }
+        }
+        return flatarray;
+    }
 }

@@ -20,6 +20,8 @@ public class Comment {
 
     private ArrayList<Comment> child_comments;
 
+    private int depth = 0;
+
 
     public int getId() {
         return id;
@@ -64,5 +66,24 @@ public class Comment {
 
     public String getCreated_at() {
         return created_at.substring(0,10) + " " + created_at.substring(11,16);
+    }
+
+    @Override
+    public String toString() {
+        return "{ id :" + id +
+                ", date: " + created_at +
+                ", depth: " + depth +
+                ", parent " + parent_comment_id +
+                ", nb children " + child_comments_count +
+                '}';
+    }
+
+
+    public int getDepth() {
+        return depth;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 }
