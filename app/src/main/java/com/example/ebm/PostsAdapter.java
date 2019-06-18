@@ -3,6 +3,7 @@ package com.example.ebm;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +14,6 @@ import com.example.ebm.database.PostDB;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.Locale;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
@@ -72,17 +72,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             title.setOnClickListener(this);
             subtitle = itemView.findViewById(R.id.subtitle);
             subtitle.setOnClickListener(this);
-            nbCom = itemView.findViewById(R.id.nbCommentaires);
+            nbCom = itemView.findViewById(R.id.nb_com);
             nbCom.setOnClickListener(this);
             thumbnail = itemView.findViewById(R.id.bg_image);
             thumbnail.setOnClickListener(this);
             date = itemView.findViewById(R.id.date);
+            ImageButton imageButton = itemView.findViewById(R.id.imageButton);
+            imageButton.setOnClickListener(this);
         }
 
         void bind(PostDB post) {
             title.setText(post.getTitle());
             subtitle.setText(post.getSubTitle());
-            nbCom.setText(String.format(Locale.FRANCE,"%d commentaires", post.getNbCom()));
+            nbCom.setText(String.valueOf(post.getNbCom()));
             date.setText(post.getCreated_at());
             String url = post.getImageUrl();
             Picasso.get().load(url).into(thumbnail);
@@ -90,7 +92,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         @Override
         public void onClick(View v) {
-            if (v.getId() == R.id.nbCommentaires)
+            if ((v.getId() == R.id.imageButton)||(v.getId() == R.id.nb_com))
                 listener.clickComm(getAdapterPosition());
             else
                 listener.clickPost(getAdapterPosition());

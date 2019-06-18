@@ -9,9 +9,9 @@
 
     <ImageView
         android:id="@+id/bg_image"
-        android:layout_width="0dp"
+        android:layout_width="100dp"
         android:layout_height="100dp"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,6 +27,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bg_image"
@@ -39,6 +42,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/tertiary_text_dark"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/title"
         app:layout_constraintStart_toStartOf="@+id/title"
         app:layout_constraintTop_toBottomOf="@+id/title"
@@ -47,22 +52,34 @@
         tools:text="sous-titre de post" />
 
     <TextView
-        android:id="@+id/nbCommentaires"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/subtitle"
-        tools:text="999 commentaires" />
-
-    <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/nbCommentaires"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="8dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/subtitle"
-        app:layout_constraintTop_toBottomOf="@+id/subtitle"
         tools:text="2019-09-07T0000" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/panelBackground"
+        app:layout_constraintEnd_toEndOf="@+id/subtitle"
+        app:layout_constraintTop_toBottomOf="@+id/subtitle"
+        app:srcCompat="@android:drawable/sym_action_chat" />
+
+    <TextView
+        android:id="@+id/nb_com"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+        app:layout_constraintEnd_toEndOf="@+id/imageButton"
+        app:layout_constraintStart_toStartOf="@+id/imageButton"
+        app:layout_constraintTop_toTopOf="@id/imageButton"
+        app:layout_constraintVertical_bias="0.4"
+        tools:text="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
