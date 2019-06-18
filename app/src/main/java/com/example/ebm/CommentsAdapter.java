@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ebm.modele.Comment;
@@ -47,6 +48,7 @@ class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ItemViewHolde
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
+        ConstraintLayout commentLayout;
         TextView name_tag;
         TextView headline;
         ImageView userPic;
@@ -60,6 +62,7 @@ class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ItemViewHolde
             userPic = itemView.findViewById(R.id.user_image);
             body = itemView.findViewById(R.id.body);
             commentDate = itemView.findViewById(R.id.com_date);
+            commentLayout = itemView.findViewById(R.id.commentLayout);
         }
 
         void bind(Comment comment) {
@@ -67,6 +70,7 @@ class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ItemViewHolde
             headline.setText(comment.getUserHeadline());
             body.setText(comment.getBody());
             commentDate.setText(comment.getCreated_at());
+            commentLayout.setPadding(32*comment.getDepth(),0,0,0);
             String url = comment.getUserPic();
             Picasso.get().load(url).transform(new RoundedTransformation(100, 0)).fit().into(userPic);
         }

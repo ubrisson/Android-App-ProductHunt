@@ -81,6 +81,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         Log.i(TAG, "onCreate: idCollec " + mIdCollection);
 
         postsList = new ArrayList<>();
+        adapter = new PostsAdapter(postsList,PostsFragment.this);
 
         if (mIdCollection == -1) {
             database = PostsDatabase.getInstance(getContext());
@@ -104,7 +105,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         recyclerView = rootview.findViewById(R.id.list);
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setVisibility(View.INVISIBLE);
+        recyclerView.setAdapter(adapter);
         Log.i(TAG, "onCreateView: Invisible RecyclerView");
 
         swipeContainer = (SwipeRefreshLayout) rootview;
@@ -221,9 +222,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
 
     //Start region database
     private void recupererPostsDB() {
-        postsList = (ArrayList<PostDB>) database.postDAO().getPostsList();
-        adapter = new PostsAdapter(postsList, PostsFragment.this);
-        
+        postsList.addAll(database.postDAO().getPostsList());
     }
 
     private void updateDBwithAPI(final List<Post> posts){
@@ -256,8 +255,7 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
             Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.setAdapter(adapter);
-                    recyclerView.setVisibility(View.VISIBLE);
+                    adapter.show(postsList);
                 }
             });
         }
@@ -267,10 +265,8 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                adapter = new PostsAdapter(postsList, PostsFragment.this);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setVisibility(View.VISIBLE);
-                Log.i(TAG, "run: post execute and view is visible");
+                adapter.show(postsList);
+                Log.i(TAG, "run: post execute");
             }
         });
     }
