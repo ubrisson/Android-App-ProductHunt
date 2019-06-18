@@ -83,7 +83,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             title.setText(post.getTitle());
             subtitle.setText(post.getSubTitle());
             nbCom.setText(String.format(Locale.FRANCE,"%d commentaires", post.getNbCom()));
-            date.setText(post.getCreated_at().substring(0,10));
+            date.setText(post.getCreated_at());
             String url = post.getImageUrl();
             Picasso.get().load(url).into(thumbnail);
         }

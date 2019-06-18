@@ -94,7 +94,7 @@ public class PostDB {
     }
 
     public String getCreated_at() {
-        return created_at;
+        return created_at.substring(0,10) + " " + created_at.substring(11,16);
     }
 
     public void setCreated_at(String created_at) {
