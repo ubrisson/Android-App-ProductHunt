@@ -2,10 +2,10 @@ package com.example.ebm;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +17,6 @@ import com.example.ebm.modele.Comment;
 import com.example.ebm.modele.Comments;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,12 +41,13 @@ public class CommentsActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             idPost = extras.getLong("idPost",-1);
-            titlePost = extras.getString("titlePost","Ruby on Rails");
+            titlePost = extras.getString("titlePost","FastAPI");
         }
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(titlePost);
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+
+        getSupportActionBar().setTitle(titlePost);
+        getSupportActionBar().setSubtitle("Comments");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getActionBar()
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
         dividerItemDecoration.setDrawable(
@@ -68,6 +68,16 @@ public class CommentsActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     //Debut de region API
     public void recupererComments(){

@@ -29,7 +29,9 @@
             android:name=".CollectionDetailActivity"/>
         <activity
             android:name=".PostDetailActivity"/>
-        <activity android:name=".CommentsActivity" />
+        <activity
+            android:name=".CommentsActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>
