@@ -26,7 +26,8 @@
             android:name=".CollectionsActivity"
             android:launchMode="singleTask"/>
         <activity
-            android:name=".CollectionDetailActivity"/>
+            android:name=".CollectionDetailActivity"
+            android:parentActivityName=".CollectionsActivity"/>
         <activity
             android:name=".PostDetailActivity"/>
         <activity

@@ -29,24 +29,33 @@ public class CollectionDetailActivity extends AppCompatActivity implements Posts
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Collection's posts");
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             idCollection = extras.getInt("idCollection",-1);
         }
 
+
+        Log.i(TAG, "onCreate: trying to add fragment");
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragment = PostsFragment.newInstance(idCollection);
-        fragmentManager.beginTransaction()
-                .add(R.id.frameLayout,fragment)
-                .commit();
+        if (fragmentManager.findFragmentByTag(TAG) == null) {
+            fragment = PostsFragment.newInstance(idCollection);
+            fragmentManager.beginTransaction()
+                    .add(R.id.frameLayout, fragment,TAG)
+                    .commit();
+            Log.i(TAG, "onCreate: fragment added");
+        }
+        else{
+            fragment = (PostsFragment) fragmentManager.findFragmentByTag(TAG);
+            Log.i(TAG, "onCreate: fragment reused");
+        }
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
