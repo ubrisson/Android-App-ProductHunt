@@ -30,7 +30,7 @@ public class PostDetailActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarPost);
         toolbar.setTitle("Post's details");
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         webView = findViewById(R.id.webView);
         Bundle extras = getIntent().getExtras();
