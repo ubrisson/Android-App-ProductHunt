@@ -8,6 +8,8 @@ import android.widget.FrameLayout;
 
 import com.example.ebm.database.PostDB;
 
+import java.util.Objects;
+
 public class MainActivity extends BaseDrawerActivity
         implements PostsFragment.OnListFragmentInteractionListener {
 
@@ -19,7 +21,7 @@ public class MainActivity extends BaseDrawerActivity
 
         super.onCreate(savedInstanceState);
 
-        getSupportActionBar().setTitle(TAG);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(TAG);
         FrameLayout contentFrameLayout = findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.fragment_main, contentFrameLayout);
 
@@ -29,17 +31,11 @@ public class MainActivity extends BaseDrawerActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
             fragment.updatePosts();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
