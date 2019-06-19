@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".CommentsActivity"
+        tools:context=".comments.CommentsActivity"
         tools:listitem="@layout/comment" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

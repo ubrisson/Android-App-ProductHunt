@@ -1,4 +1,4 @@
-package com.example.ebm;
+package com.example.ebm.comments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -16,7 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ebm.modele.Comment;
+import com.example.ebm.R;
+import com.example.ebm.comments.models.Comment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

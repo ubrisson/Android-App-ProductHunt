@@ -1,4 +1,4 @@
-package com.example.ebm;
+package com.example.ebm.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.ebm.posts.PostDetailActivity;
+import com.example.ebm.R;
 import com.example.ebm.database.PostDB;
+import com.example.ebm.posts.PostsFragment;
 
 import java.util.Objects;
 
@@ -74,7 +77,7 @@ public class CollectionDetailActivity extends AppCompatActivity implements Posts
     @Override
     public void onListFragmentInteraction(PostDB post) {
         Log.i(TAG, "onListFragmentInteraction: clicked" + post.getTitle());
-        Intent postIntent = new Intent(this,PostDetailActivity.class);
+        Intent postIntent = new Intent(this, PostDetailActivity.class);
         postIntent.putExtra("postUrl", post.getPostUrl());
         startActivity(postIntent);
     }

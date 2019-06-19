@@ -1,4 +1,4 @@
-package com.example.ebm;
+package com.example.ebm.posts;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,11 +17,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ebm.API.APIClient;
 import com.example.ebm.API.APIInterface;
+import com.example.ebm.R;
+import com.example.ebm.comments.CommentsActivity;
 import com.example.ebm.database.PostDB;
 import com.example.ebm.database.PostsDatabase;
-import com.example.ebm.modele.CollecResponse;
-import com.example.ebm.modele.Post;
-import com.example.ebm.modele.PostsList;
+import com.example.ebm.posts.models.CollecResponse;
+import com.example.ebm.posts.models.Post;
+import com.example.ebm.posts.models.PostsList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,18 +43,15 @@ import retrofit2.Response;
  */
 public class PostsFragment extends Fragment implements PostsAdapter.onClickPostListener{
 
-    private static final String ARG_ID_COLLEC = "idCollec";
-    private int mIdCollection = -1;
-    private OnListFragmentInteractionListener mListener;
-    private String TAG = "PostsFragment";
-    private RecyclerView recyclerView;
     private PostsAdapter adapter;
-    private ArrayList<PostDB> postsList;
-    private SwipeRefreshLayout swipeContainer;
+    private static final String ARG_ID_COLLEC = "idCollec";
     private PostsDatabase database;
-
+    private ArrayList<PostDB> postsList;
+    private int mIdCollection = -1;
+    private SwipeRefreshLayout swipeContainer;
+    private String TAG = "PostsFragment";
+    private OnListFragmentInteractionListener mListener;
     private ExecutorService dbExecutor = Executors.newSingleThreadExecutor();
-    private View rootview;
 
 
     /**
@@ -93,13 +92,13 @@ public class PostsFragment extends Fragment implements PostsAdapter.onClickPostL
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootview = inflater.inflate(R.layout.posts_list, container, false);
+        View rootview = inflater.inflate(R.layout.posts_list, container, false);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(Objects.requireNonNull(getContext()), LinearLayoutManager.VERTICAL);
         dividerItemDecoration.setDrawable(
                 this.getResources().getDrawable(R.drawable.sk_line_divider, Objects.requireNonNull(getActivity()).getTheme()));
 
-        recyclerView = rootview.findViewById(R.id.list);
+        RecyclerView recyclerView = rootview.findViewById(R.id.list);
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);

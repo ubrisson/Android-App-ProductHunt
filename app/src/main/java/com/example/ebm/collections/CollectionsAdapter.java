@@ -1,4 +1,4 @@
-package com.example.ebm.collections_feature;
+package com.example.ebm.collections;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ebm.R;
-import com.example.ebm.modele.CollecPH;
+import com.example.ebm.collections.models.CollecPH;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

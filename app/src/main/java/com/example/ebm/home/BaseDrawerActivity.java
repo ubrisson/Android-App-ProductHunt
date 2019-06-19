@@ -1,4 +1,4 @@
-package com.example.ebm;
+package com.example.ebm.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.ebm.R;
+import com.example.ebm.collections.CollectionsActivity;
 import com.google.android.material.navigation.NavigationView;
 
 public class BaseDrawerActivity extends AppCompatActivity {

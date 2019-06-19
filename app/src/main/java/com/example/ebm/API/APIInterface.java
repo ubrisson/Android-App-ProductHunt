@@ -1,9 +1,9 @@
 package com.example.ebm.API;
 
-import com.example.ebm.modele.CollecResponse;
-import com.example.ebm.modele.CollectionsList;
-import com.example.ebm.modele.Comments;
-import com.example.ebm.modele.PostsList;
+import com.example.ebm.posts.models.CollecResponse;
+import com.example.ebm.collections.models.CollectionsList;
+import com.example.ebm.comments.models.Comments;
+import com.example.ebm.posts.models.PostsList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

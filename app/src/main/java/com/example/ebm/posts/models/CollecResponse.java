@@ -1,4 +1,4 @@
-package com.example.ebm.modele;
+package com.example.ebm.posts.models;
 
 public class CollecResponse {
 

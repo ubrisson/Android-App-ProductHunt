@@ -1,4 +1,4 @@
-package com.example.ebm;
+package com.example.ebm.posts;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +11,8 @@ import android.webkit.WebViewClient;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.example.ebm.R;
 
 import java.util.Objects;
 

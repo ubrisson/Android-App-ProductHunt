@@ -1,4 +1,4 @@
-package com.example.ebm.modele;
+package com.example.ebm.posts.models;
 
 import com.example.ebm.database.PostDB;
 import com.google.gson.annotations.SerializedName;

@@ -1,4 +1,4 @@
-package com.example.ebm;
+package com.example.ebm.collections;
 
 import android.content.Intent;
 import android.graphics.Rect;
@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ebm.API.APIClient;
 import com.example.ebm.API.APIInterface;
-import com.example.ebm.collections_feature.CollectionsAdapter;
-import com.example.ebm.modele.CollectionsList;
+import com.example.ebm.home.BaseDrawerActivity;
+import com.example.ebm.home.CollectionDetailActivity;
+import com.example.ebm.R;
+import com.example.ebm.collections.models.CollectionsList;
 
 import retrofit2.Call;
 import retrofit2.Callback;

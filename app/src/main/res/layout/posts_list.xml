@@ -13,7 +13,7 @@
     android:layout_height="match_parent"
     android:scrollbars="vertical"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".PostsFragment"
+    tools:context=".posts.PostsFragment"
     tools:listitem="@layout/post" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

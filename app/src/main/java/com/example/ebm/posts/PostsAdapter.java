@@ -1,4 +1,4 @@
-package com.example.ebm;
+package com.example.ebm.posts;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ebm.R;
 import com.example.ebm.database.PostDB;
 import com.squareup.picasso.Picasso;
 

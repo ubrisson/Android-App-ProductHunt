@@ -1,4 +1,4 @@
-package com.example.ebm;
+package com.example.ebm.comments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,8 +13,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ebm.API.APIClient;
 import com.example.ebm.API.APIInterface;
-import com.example.ebm.modele.Comment;
-import com.example.ebm.modele.Comments;
+import com.example.ebm.R;
+import com.example.ebm.comments.models.Comment;
+import com.example.ebm.comments.models.Comments;
 
 import java.util.ArrayList;
 
