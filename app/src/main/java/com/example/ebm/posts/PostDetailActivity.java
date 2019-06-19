@@ -30,7 +30,7 @@ public class PostDetailActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarPost);
         toolbar.setTitle("Post's details");
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         webView = findViewById(R.id.webView);
         Bundle extras = getIntent().getExtras();
@@ -51,12 +51,16 @@ public class PostDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_web) {
-            openWebPage(url);
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_web:
+                openWebPage(url);
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
 
